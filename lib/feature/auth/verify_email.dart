@@ -56,6 +56,14 @@ class _VerifyEmailCodeScreenState extends State<VerifyEmailCodeScreen> {
       if (operation == ActionCodeInfoOperation.verifyEmail) {
         await _auth.applyActionCode(code);
         await _auth.currentUser!.reload();
+        if (!currentContext.mounted) return;
+        ScaffoldMessenger.of(currentContext).showSnackBar(
+          const SnackBar(
+            content: Text(
+              '✅ Email verified successfully.',
+            ),
+          ),
+        );
         _statusController.add(VerifyEmailStatus.success);
       } else {
         if (!currentContext.mounted) return;
