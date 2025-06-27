@@ -55,18 +55,21 @@ class _VerifyEmailCodeScreenState extends State<VerifyEmailCodeScreen> {
 
       if (operation == ActionCodeInfoOperation.verifyEmail) {
         await _auth.applyActionCode(code);
+        await _auth.currentUser!.reload();
         _statusController.add(VerifyEmailStatus.success);
       } else {
-        if(!currentContext.mounted) return;
+        if (!currentContext.mounted) return;
         ScaffoldMessenger.of(currentContext).showSnackBar(
           SnackBar(
-            content: Text('''Code operation must be ActionCodeInfoOperation.verifyEmail.\nActual: $operation'''),
+            content: Text(
+              '''Code operation must be ActionCodeInfoOperation.verifyEmail.\nActual: $operation''',
+            ),
           ),
         );
         _statusController.add(VerifyEmailStatus.invalidOperation);
       }
     } on FirebaseAuthException catch (e) {
-      if(!currentContext.mounted) return;
+      if (!currentContext.mounted) return;
       ScaffoldMessenger.of(currentContext).showSnackBar(
         SnackBar(
           content: Text('Firebase error: ${e.message}'),
@@ -84,7 +87,7 @@ class _VerifyEmailCodeScreenState extends State<VerifyEmailCodeScreen> {
 
   Future<void> _resendCode() async {
     final currentContext = context;
-    try{
+    try {
       await _auth.currentUser!.sendEmailVerification();
 
       if (!currentContext.mounted) return;
@@ -94,7 +97,7 @@ class _VerifyEmailCodeScreenState extends State<VerifyEmailCodeScreen> {
         ),
       );
     } on FirebaseAuthException catch (e) {
-      if(!currentContext.mounted) return;
+      if (!currentContext.mounted) return;
       ScaffoldMessenger.of(currentContext).showSnackBar(
         SnackBar(
           content: Text('Firebase error: ${e.message}'),
@@ -107,6 +110,7 @@ class _VerifyEmailCodeScreenState extends State<VerifyEmailCodeScreen> {
       );
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -125,9 +129,7 @@ class _VerifyEmailCodeScreenState extends State<VerifyEmailCodeScreen> {
             ),
             const SizedBox(height: 16),
             ElevatedButton(
-              onPressed: _isCodeNotEmpty 
-                ? _verifyCode
-                : null,
+              onPressed: _isCodeNotEmpty ? _verifyCode : null,
               child: const Text('Verify'),
             ),
             const SizedBox(height: 16),

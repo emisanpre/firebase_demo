@@ -51,7 +51,7 @@ class _AuthGateState extends State<AuthGate> {
   @override
   void initState() {
     super.initState();
-    _streamUser = FirebaseAuth.instance.authStateChanges();
+    _streamUser = FirebaseAuth.instance.userChanges();
   }
 
   @override
@@ -67,7 +67,7 @@ class _AuthGateState extends State<AuthGate> {
 
         if (snapshot.hasData && snapshot.data!.emailVerified) {
           return const HomeScreen();
-        } else if(snapshot.hasData && !snapshot.data!.emailVerified) {
+        } else if (snapshot.hasData && !snapshot.data!.emailVerified) {
           return const VerifyEmailCodeScreen();
         }
 
